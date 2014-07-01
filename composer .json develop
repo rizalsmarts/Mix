@@ -1,0 +1,40 @@
+{
+    "name": "core/mix",
+    "type": "plugin",
+    "description": "make some project",
+    "keywords": [
+        "php project"
+    ],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "core/mix": "*",
+        "php": ">=5.4",
+        "rhumsaa/array_column": ">=1.1.2"
+    },
+    "homepage": "https://github.com/rizalsmarts/mix",
+    "authors": [
+        {
+            "name": "Rizal Smarts",
+            "email": "rizalsmarts@gmail.com",
+            "homepage": "https://github.com/rizalsmarts",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "rizalsmarts@gmail.com",
+        "source": "https://github.com/rizalsmarts/mix"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*",
+        "squizlabs/php_codesniffer": ">=2.0.0a2",
+        "mayflower/php-codebrowser": ">=1.1.0",
+        "apigen/apigen": ">=2.8.0",
+        "nette/nette": "~2.1.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mix\\Core\\": "src/Mix/Core"
+        }
+    }
+}

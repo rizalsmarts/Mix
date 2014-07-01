@@ -1,0 +1,35 @@
+{
+    "name": "core/mix",
+    "type": "plugin",
+    "description": "make some project",
+    "keywords": [
+        "php project"
+    ],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "core/mix": "*",
+        "php": ">=5.4"
+    },
+    "homepage": "https://github.com/rizalsmarts/mix",
+    "authors": [
+        {
+            "name": "Rizal Smarts",
+            "email": "rizalsmarts@gmail.com",
+            "homepage": "https://github.com/rizalsmarts",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "rizalsmarts@gmail.com",
+        "source": "https://github.com/rizalsmarts/mix"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Mix\\Core\\": "src/Mix/Core",
+            "MixApp\\": "src/MixApp/modules"
+        }
+    }
+}
