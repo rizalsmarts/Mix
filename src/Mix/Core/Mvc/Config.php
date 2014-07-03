@@ -5,15 +5,16 @@ namespace Mix\Core\Mvc;
 
 class Config
 {
-    protected $bootstrap = null;
+    private $bootstrap = null;
 
     public function __construct(&$bootstrap)
     {
         $this->bootstrap = $bootstrap;
+
         $this->configuration();
     }
 
-    protected function configuration()
+    private function configuration()
     {
         ($this->bootstrap->pathRoot === null)
         ? $this->makePathRoot()
@@ -30,56 +31,61 @@ class Config
         return false;
     }
 
-    protected function makeProtocol()
+    private function makeProtocol()
     {
-        $this->bootstrap->protocol = strpos(
+        $protocol = strpos(
             strtolower($_SERVER['SERVER_PROTOCOL']),
             'https'
         ) === FALSE ? 'http' : 'https';
 
+        $this->bootstrap->setProtocol($protocol);
+
         return false;
     }
 
-    protected function makeHttpRoot()
+    private function makeHttpRoot()
     {
-        $this->bootstrap->httpRoot = $_SERVER['HTTP_HOST'];
+        $this->bootstrap->setHttpRoot($_SERVER['HTTP_HOST']);
 
         return false;
     }
 
-    protected function makeHttFolder()
+    private function makeHttFolder()
     {
-        $this->bootstrap->httpFolder =
-        dirname($_SERVER['PHP_SELF']) . '/';
+        $this->bootstrap->setHttpFolder(
+            dirname($_SERVER['PHP_SELF'])
+            . '/'
+        );
 
         return false;
     }
 
-    protected function makeUrlBase()
+    private function makeUrlBase()
     {
         $this->makeProtocol();
         $this->makeHttpRoot();
         $this->makeHttFolder();
 
-        $this->bootstrap->urlBase = $this->bootstrap->protocol
-        . "://" . $this->bootstrap->httpRoot
-        . $this->bootstrap->httpFolder;
+        $this->bootstrap->urlBase = $this->bootstrap->getProtocol()
+        . "://" . $this->bootstrap->getHttpRoot()
+        . $this->bootstrap->getHttpFolder();
 
         return false;
     }
 
-    protected function makeUrlComplate()
+    private function makeUrlComplate()
     {
-        $this->bootstrap->urlComplate   = $this->bootstrap->protocol
-        . "://" . $this->bootstrap->httpRoot . $_SERVER['REQUEST_URI'];
+        $this->bootstrap->urlComplate = $this->bootstrap->getProtocol()
+        . "://"
+        . $this->bootstrap->getHttpRoot()
+        . $_SERVER['REQUEST_URI'];
 
         return false;
     }
 
-    protected function makePathRoot()
+    private function makePathRoot()
     {
-        $this->bootstrap->pathRoot = dirname(__FILE__)
-        .'/../../../';
+        $this->bootstrap->pathRoot = dirname(__FILE__) . '/../../../';
 
         return false;
     }

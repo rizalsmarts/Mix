@@ -5,7 +5,7 @@ namespace Mix\Core\Router;
 
 class Router
 {
-    protected $bootstrap = null;
+    private $bootstrap = null;
 
     public function __construct(&$bootstrap)
     {
@@ -13,7 +13,7 @@ class Router
         $this->routing();
     }
 
-    protected function routing()
+    private function routing()
     {
         if ($this->bootstrap->type = "apps") {
             foreach ($this->bootstrap->config as $key => $val)
@@ -27,7 +27,8 @@ class Router
                 }
             }
             throw new \Exception(
-                "ERROR 404 : ". $this->bootstrap->urlComplate
+                "ERROR 404 : "
+                . $this->bootstrap->urlComplate
                 . "Not Found"
             );
             return false;
@@ -39,7 +40,9 @@ class Router
                 return $this->matchUrl($val);
             }
             throw new \Exception(
-                "ERROR 404 : ". $this->bootstrap->urlComplate . "Not Found"
+                "ERROR 404 : "
+                . $this->bootstrap->urlComplate
+                . "Not Found"
             );
             return false;
         }
@@ -49,44 +52,47 @@ class Router
         return false;
     }
 
-    protected function matchUrl($val)
+    private function matchUrl($val)
     {
-        $this->bootstrap->className = $val["pathUrl"];
+        $this->bootstrap->setClassName($val["pathUrl"]);
         $this->parseUrl();
 
         // WARNING:check method get parameter standart belum dibuat.
-        if ($this->bootstrap->urlAction
+        if ($this->bootstrap->getUrlAction()
         === $this->bootstrap->urlWithOutParams
-        && !empty($this->bootstrap->urlArrayParams[0])
+        && !empty($this->bootstrap->getUrlArrayParams()[0])
+        && $this->bootstrap->getUrlCountArrayParams()-1 > 0
         && !empty(
-            $this->bootstrap->urlArrayParams[
-                $this->bootstrap->urlCountArrayParams-1
-            ]
+            $this->bootstrap->getUrlArrayParams()
+            [$this->bootstrap->getUrlCountArrayParams()-1]
         )) {
-            return $this->bootstrap->pathFolder = $val["pathFolder"];
+            return $this->bootstrap->setPathFolder($val["pathFolder"]);
         }
 
-        if ($this->bootstrap->urlAction === $this->bootstrap->urlComplate) {
-            return $this->bootstrap->pathFolder = $val["pathFolder"];
+        if ($this->bootstrap->getUrlAction()
+        === $this->bootstrap->urlComplate) {
+            return $this->bootstrap->setPathFolder($val["pathFolder"]);
         }
 
         return false;
     }
 
-    protected function parseUrl()
+    private function parseUrl()
     {
-        $this->bootstrap->urlAction     = $this->bootstrap->urlBase
-        .$this->bootstrap->className;
+        $this->bootstrap->setUrlAction($this->bootstrap->urlBase
+        .$this->bootstrap->getClassName());
 
-        $urlLengthBase       = strlen($this->bootstrap->urlAction);
+        $urlLengthBase       = strlen($this->bootstrap->getUrlAction());
         $urlParams           = substr(
             $this->bootstrap->urlComplate,
             $urlLengthBase
         );
-        $this->bootstrap->urlParams        = substr($urlParams, 1);
-        $this->bootstrap->urlArrayParams   = explode(
-            '/',
-            $this->bootstrap->urlParams
+        $this->bootstrap->setUrlParams(substr($urlParams, 1));
+        $this->bootstrap->setUrlArrayParams(
+            explode(
+                '/',
+                $this->bootstrap->getUrlParams()
+            )
         );
         $urlLengthParams        = strlen($urlParams);
         $this->bootstrap->urlWithOutParams = substr(
@@ -94,14 +100,17 @@ class Router
             0,
             (int)-$urlLengthParams
         );
-        $this->bootstrap->urlCountArrayParams = count(
-            $this->bootstrap->urlArrayParams
+        $this->bootstrap->setUrlCountArrayParams(
+            count(
+                $this->bootstrap->getUrlArrayParams()
+            )
         );
 
-        if (empty($this->bootstrap->urlArrayParams[1])
-        || $this->bootstrap->urlArrayParams[0] != 'params'
-        || (($this->bootstrap->urlCountArrayParams-1) % 2) != 0) {
-            $this->bootstrap->urlArrayParams = null;
+        if (isset($this->bootstrap->getUrlArrayParams()[1])
+        && empty($this->bootstrap->getUrlArrayParams()[1])
+        || $this->bootstrap->getUrlArrayParams()[0] != 'params'
+        || (($this->bootstrap->getUrlCountArrayParams()-1) % 2) != 0) {
+            $this->bootstrap->setUrlArrayParams(null);
         }
 
         return false;
